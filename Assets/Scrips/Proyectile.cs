@@ -3,189 +3,123 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-/*
-public class Projectile : MonoBehaviour
+/*public class Projectile : MonoBehaviour
 {
-    public float speed = 10f; // Velocidad del proyectil
-    public float lifetime = 10f; // Tiempo de vida del proyectil
+    public float speed = 10f;
+    public float lifeTime = 5f;
+
+    private Vector3 targetPosition;
 
     void Start()
     {
-        Destroy(gameObject, lifetime); // Destruye el proyectil después de 'lifetime' segundos
+        Destroy(gameObject, lifeTime);
+    }
+
+    public void SetTarget(Vector3 target)
+    {
+        targetPosition = target;
     }
 
     void Update()
     {
-        transform.Translate(Vector3.forward * speed * Time.deltaTime);
+        transform.position = Vector3.MoveTowards(transform.position, targetPosition, speed * Time.deltaTime);
     }
 
-    void OnTriggerEnter(Collider other)
+    void OnCollisionEnter(Collision collision)
     {
-        if (other.CompareTag("Player"))
+        if (collision.gameObject.CompareTag("Player"))
         {
-            Destroy(other.gameObject); // Destruye al jugador
-            Destroy(gameObject); // Destruye el proyectil
+            // Aquí puedes manejar la lógica de perder el juego
+            Debug.Log("Jugador ha sido golpeado. Fin del juego.");
+            // Puedes llamar a un método que maneje la pérdida del juego, por ejemplo:
+            // GameManager.Instance.GameOver();
         }
+        Destroy(gameObject);
+    }
+}
+
+*/
+
+/*public class Projectile : MonoBehaviour
+{
+    public float speed = 10f;
+    public float lifeTime = 5f;
+
+    private Vector3 targetPosition;
+    private bool isTargetSet = false;
+
+    private void Start()
+    {
+        Destroy(gameObject, lifeTime);
+    }
+
+    public void SetTarget(Vector3 target)
+    {
+        targetPosition = target;
+        isTargetSet = true;
+    }
+
+    private void Update()
+    {
+        if (isTargetSet)
+        {
+            transform.position = Vector3.MoveTowards(transform.position, targetPosition, speed * Time.deltaTime);
+        }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            // Aquí puedes manejar la lógica de perder el juego
+            Debug.Log("Jugador ha sido golpeado. Fin del juego.");
+            // Puedes llamar a un método que maneje la pérdida del juego, por ejemplo:
+            // GameManager.Instance.GameOver();
+        }
+        Destroy(gameObject);
+    }
+
+    private void OnDestroy()
+    {
+        // Limpia cualquier referencia que pueda causar problemas
+        isTargetSet = false;
     }
 }
 */
 
-
-/*public class Projectile : MonoBehaviour
-{
-    public float speed = 10f; // Velocidad del proyectil
-    public float lifetime = 10f; // Tiempo de vida del proyectil
-
-    void Start()
-    {
-        Destroy(gameObject, lifetime); // Destruye el proyectil después de 'lifetime' segundos
-    }
-
-    void Update()
-    {
-        // Mueve el proyectil en el eje X positivo
-        transform.Translate(Vector3.right * speed * Time.deltaTime);
-    }
-
-    void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Player"))
-        {
-            Destroy(other.gameObject); // Destruye al jugador
-            Destroy(gameObject); // Destruye el proyectil
-        }
-    }
-}
-*/
-
-
-
-/*public class Projectile : MonoBehaviour
-{
-    public float speed = 10f; // Velocidad del proyectil
-    public float lifetime = 10f; // Tiempo de vida del proyectil
-
-    void Start()
-    {
-        Destroy(gameObject, lifetime); // Destruye el proyectil después de 'lifetime' segundos
-    }
-
-    void Update()
-    {
-        // Mueve el proyectil en el eje X positivo
-        transform.Translate(Vector3.right * speed * Time.deltaTime);
-    }
-
-    void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Player"))
-        {
-            Destroy(other.gameObject); // Destruye al jugador
-            Destroy(gameObject); // Destruye el proyectil
-        }
-    }
-}
-*/
-
-
-
-/*public class Projectile : MonoBehaviour
-{
-    public float speed = 10f; // Velocidad del proyectil
-    public float lifetime = 10f; // Tiempo de vida del proyectil
-    private Vector3 direction;
-
-    void Start()
-    {
-        Destroy(gameObject, lifetime); // Destruye el proyectil después de 'lifetime' segundos
-    }
-
-    void Update()
-    {
-        transform.Translate(direction * speed * Time.deltaTime);
-    }
-
-    public void SetDirection(Vector3 dir)
-    {
-        direction = dir.normalized;
-    }
-
-    void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Player"))
-        {
-            Destroy(other.gameObject); // Destruye al jugador
-            Destroy(gameObject); // Destruye el proyectil
-        }
-    }
-}
-*/
-
-
-/*public class Projectile : MonoBehaviour
-{
-    public float speed = 10f; // Velocidad del proyectil
-    public float lifetime = 10f; // Tiempo de vida del proyectil
-    private Vector3 direction;
-
-    void Start()
-    {
-        Destroy(gameObject, lifetime); // Destruye el proyectil después de 'lifetime' segundos
-    }
-
-    void Update()
-    {
-        transform.Translate(direction * speed * Time.deltaTime);
-    }
-
-    public void SetDirection(Vector3 dir)
-    {
-        direction = dir.normalized;
-    }
-
-    void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Player"))
-        {
-            Destroy(other.gameObject); // Destruye al jugador
-            Destroy(gameObject); // Destruye el proyectil
-        }
-    }
-}*/
 
 
 public class Projectile : MonoBehaviour
 {
-    public float speed = 10f; // Velocidad del proyectil
-   // public float lifetime = 10f; // Tiempo de vida del proyectil
-    private Vector3 direction;
+    public float speed = 10f;
+    public float lifeTime = 5f;
 
-    void Start()
+    private bool isMoving = true;
+
+    private void Start()
     {
-   //    Destroy(gameObject, lifetime); // Destruye el proyectil después de 'lifetime' segundos
+        Destroy(gameObject, lifeTime);
     }
 
-    void Update()
+    private void Update()
     {
-        transform.Translate(direction * speed * Time.deltaTime);
-    }
-
-    public void SetDirection(Vector3 dir)
-    {
-        direction = dir.normalized;
-    }
-
-    void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Player"))
+        if (isMoving)
         {
-            Destroy(other.gameObject); // Destruye al jugador
-            Destroy(gameObject); // Destruye el proyectil
+            // Mover el proyectil en la dirección positiva del eje X
+            transform.Translate(Vector3.right * speed * Time.deltaTime);
         }
-        else if (other.CompareTag("Wall"))
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
         {
-            Destroy(gameObject); // Destruye el proyectil al colisionar con una pared
+            // Aquí puedes manejar la lógica de perder el juego
+            Debug.Log("Jugador ha sido golpeado. Fin del juego.");
+            // Puedes llamar a un método que maneje la pérdida del juego, por ejemplo:
+            // GameManager.Instance.GameOver();
         }
+        isMoving = false; // Detener el movimiento cuando colisione con algo
+        Destroy(gameObject);
     }
 }
-
